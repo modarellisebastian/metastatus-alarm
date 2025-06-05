@@ -36,12 +36,17 @@ function renderChannels(channels) {
 
 async function sendToSlack(id, message) {
   try {
-    await fetch(SLACK_PROXY, {
+    const res = await fetch(SLACK_PROXY, {
       method: 'POST',
-      mode: 'no-cors',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ channel_id: id, text: message })
     });
+
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok || data.error) {
+      throw new Error(data.error || 'Respuesta inesperada del proxy');
+    }
+
     console.log(`✅ Enviado a Slack: ${id}`);
   } catch (error) {
     console.error(`❌ Error en Slack (${id}):`, error.message);
