@@ -42,7 +42,9 @@ async function sendToSlack(id, message) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ channel_id: id, text: message })
     });
-    console.log(`✅ Enviado a Slack: ${id}`);
+    // En modo "no-cors" no podemos leer la respuesta, asumimos exito
+    console.log(`✅ Enviado a Slack (sin verificacion): ${id}`);
+    return;
   } catch (error) {
     console.error(`❌ Error en Slack (${id}):`, error.message);
   }
